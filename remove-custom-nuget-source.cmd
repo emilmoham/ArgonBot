@@ -1,0 +1,1 @@
+nuget sources | findstr pleebo-tv-bot-packages && (dotnet nuget remove source pleebo-tv-bot-packages)
