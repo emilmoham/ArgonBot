@@ -1,7 +1,7 @@
-using pleebo_tv_bot.HostedServices;
+using ArgonBot.HostedServices;
 using TwitchLib.EventSub.Websockets.Extensions;
 
-namespace pleebo_tv_bot
+namespace ArgonBot
 {
     public class Program
     {

@@ -5,7 +5,7 @@ using TwitchLib.Api;
 using TwitchLib.Api.Core.Enums;
 using TwitchLib.Api.Helix.Models.EventSub;
 
-namespace pleebo_tv_bot.HostedServices
+namespace ArgonBot.HostedServices
 {
     public class WebsocketHostedService : IHostedService
     {

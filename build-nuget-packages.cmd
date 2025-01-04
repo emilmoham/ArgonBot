@@ -25,4 +25,4 @@ dotnet pack TwitchLib.EventSub.Websockets.sln -v normal -c Release -o nugets --n
 xcopy .\nugets\*.nupkg ..\nuget /y
 
 cd ..
-nuget sources | findstr pleebo-tv-bot-packages || (dotnet nuget add source %cd%\nuget --name pleebo-tv-bot-packages)
+nuget sources | findstr argon-bot-packages || (dotnet nuget add source %cd%\nuget --name argon-bot-packages)

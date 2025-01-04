@@ -1,6 +1,0 @@
-@pleebo_tv_bot_HostAddress = http://localhost:5291
-
-GET {{pleebo_tv_bot_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
