@@ -1,0 +1,9 @@
+[submodule "TwitchLib.Client"]
+	path = TwitchLib.Client
+	url = https://github.com/TwitchLib/TwitchLib.Client.git
+[submodule "TwitchLib.Api"]
+	path = TwitchLib.Api
+	url = https://github.com/TwitchLib/TwitchLib.Api.git
+[submodule "TwitchLib.EventSub.Websockets"]
+	path = TwitchLib.EventSub.Websockets
+	url = https://github.com/TwitchLib/TwitchLib.EventSub.Websockets.git
