@@ -1,4 +1,4 @@
-namespace pleebo_tv_bot
+namespace ArgonBot
 {
     public class WeatherForecast
     {

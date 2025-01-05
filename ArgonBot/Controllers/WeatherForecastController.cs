@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace pleebo_tv_bot.Controllers
+namespace ArgonBot.Controllers
 {
     [ApiController]
     [Route("[controller]")]
