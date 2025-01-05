@@ -1,4 +1,5 @@
 using ArgonBot.HostedServices;
+using ArgonBot.Services;
 using TwitchLib.EventSub.Websockets.Extensions;
 
 namespace ArgonBot
@@ -20,6 +21,8 @@ namespace ArgonBot
             builder.Services.AddTwitchLibEventSubWebsockets();
 
             builder.Services.AddHostedService<WebsocketHostedService>();
+
+            builder.Services.AddSingleton<TwitchApiService>();
 
             var app = builder.Build();
 

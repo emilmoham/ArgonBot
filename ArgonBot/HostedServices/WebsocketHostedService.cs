@@ -1,9 +1,7 @@
 ﻿using TwitchLib.EventSub.Websockets;
 using TwitchLib.EventSub.Websockets.Core.EventArgs;
 using TwitchLib.EventSub.Websockets.Core.EventArgs.Channel;
-using TwitchLib.Api;
-using TwitchLib.Api.Core.Enums;
-using TwitchLib.Api.Helix.Models.EventSub;
+using ArgonBot.Services;
 
 namespace ArgonBot.HostedServices
 {
@@ -13,22 +11,17 @@ namespace ArgonBot.HostedServices
         private readonly ILogger<WebsocketHostedService> _logger;
         private readonly EventSubWebsocketClient _eventSubWebsocketClient;
 
-        private readonly TwitchAPI _api;
+        private readonly TwitchApiService _twitchApiService;
 
-        private readonly string _clientId = "";
-        private readonly string _accessToken = "";
-        private readonly string _chatChannelUserId = "";
-        private readonly string _botUserId = "";
-
-
-        public WebsocketHostedService(ILogger<WebsocketHostedService> logger, EventSubWebsocketClient eventSubWebsocketClient)
-        {
+        public WebsocketHostedService(
+            ILogger<WebsocketHostedService> logger,
+            EventSubWebsocketClient eventSubWebsocketClient,
+            TwitchApiService twitchApiService
+        ) {
 
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            
-            _api = new TwitchAPI();
-            _api.Settings.ClientId = _clientId;
-            _api.Settings.AccessToken = _accessToken;
+
+            _twitchApiService = twitchApiService;
 
             _eventSubWebsocketClient = eventSubWebsocketClient ?? throw new ArgumentNullException(nameof(eventSubWebsocketClient));
             _eventSubWebsocketClient.WebsocketConnected += OnWebsocketConnected;
@@ -55,28 +48,9 @@ namespace ArgonBot.HostedServices
 
             if (!e.IsRequestedReconnect)
             {
-                _logger.LogInformation("Requested reconnect");
-
-                try { 
-                    var x = await _api.Helix.EventSub.CreateEventSubSubscriptionAsync(
-                        "channel.chat.message",
-                        "1",
-                        new Dictionary<string, string>()
-                        {
-                            ["broadcaster_user_id"] = _chatChannelUserId,
-                            ["user_id"] = _botUserId
-                        },
-                        EventSubTransportMethod.Websocket,
-                        _eventSubWebsocketClient.SessionId);
-                } catch (Exception ee)
-                {
-                    _logger.LogError(ee, "error subscribing");
-                }
-
-                _logger.LogInformation("Subscription Created");
+                await _twitchApiService.SubscribeToChatMessages(_eventSubWebsocketClient.SessionId);
+                _logger.LogInformation("Subscribed to chat messages");
             }
-
-            
         }
 
         private async Task OnWebsocketDisconnected(object sender, EventArgs e)
@@ -105,10 +79,7 @@ namespace ArgonBot.HostedServices
         {
             if (e.Notification.Payload.Event.Message.Text.Trim() == "HeyGuys")
             {
-                await _api.Helix.Chat.SendChatMessage(
-                    _chatChannelUserId,
-                    _botUserId,
-                    "VoHiYo");
+                await _twitchApiService.SendChatMessage("VoHiYo");
             }
         }
     }

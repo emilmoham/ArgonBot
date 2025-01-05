@@ -23,16 +23,24 @@ To get started:
     ```sh
     git clone --recurse-submodules https://github.com/emilmoham/ArgonBot.git ArgonBot
     ```
-
 2. Build the submodules into nuget packages[^1]
     * We're using submodules here because we need the dev versions of the 
       TwitchLib packages.
     ```sh
     .\build-nuget-packages.cmd
     ```
-
 3. Open the solution in your editor of choice
-4. Configure: TODO
+4. in the ArgonBot project folder create the file `appsettings.Development.json`
+    ```json
+    {
+      "Twitch": {
+        "ClientId": "CLIENT_ID_HERE",
+        "AccessToken": "ACCESS_TOKEN_HERE",
+        "BroadcasterId": "BROADCASTER_USER_ID_HERE",
+        "BotUserId": "BOT_USER_ID_HERE"
+      }
+    }
+    ```
 5. Build and run.
 
 [^1]: The `build-nuget-packages.cmd` will build and collect the nuget packages
