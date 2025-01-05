@@ -1,5 +1,6 @@
 using ArgonBot.HostedServices;
 using ArgonBot.Services;
+using Microsoft.EntityFrameworkCore;
 using TwitchLib.EventSub.Websockets.Extensions;
 
 namespace ArgonBot
@@ -16,6 +17,11 @@ namespace ArgonBot
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            string? connectionString = builder.Configuration.GetConnectionString("ApplicationDbContext");
+
+            builder.Services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseSqlite(connectionString));
 
             builder.Services.AddLogging();
             builder.Services.AddTwitchLibEventSubWebsockets();
