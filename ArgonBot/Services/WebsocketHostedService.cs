@@ -1,26 +1,27 @@
 ﻿using TwitchLib.EventSub.Websockets;
 using TwitchLib.EventSub.Websockets.Core.EventArgs;
 using TwitchLib.EventSub.Websockets.Core.EventArgs.Channel;
-using ArgonBot.Services;
 
-namespace ArgonBot.HostedServices
+namespace ArgonBot.Services
 {
     public class WebsocketHostedService : IHostedService
     {
-        
+
         private readonly ILogger<WebsocketHostedService> _logger;
         private readonly EventSubWebsocketClient _eventSubWebsocketClient;
-
+        private readonly IServiceProvider _serviceProvider;
         private readonly TwitchApiService _twitchApiService;
 
         public WebsocketHostedService(
             ILogger<WebsocketHostedService> logger,
             EventSubWebsocketClient eventSubWebsocketClient,
-            TwitchApiService twitchApiService
-        ) {
+            TwitchApiService twitchApiService,
+            IServiceProvider serviceProvider
+        )
+        {
 
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-
+            _serviceProvider = serviceProvider;
             _twitchApiService = twitchApiService;
 
             _eventSubWebsocketClient = eventSubWebsocketClient ?? throw new ArgumentNullException(nameof(eventSubWebsocketClient));
@@ -80,8 +81,19 @@ namespace ArgonBot.HostedServices
             if (e.Notification.Payload.Event.Message.Text.Trim() == "HeyGuys")
             {
                 await _twitchApiService.SendChatMessage("VoHiYo");
+                return;
+            }
+
+            await using AsyncServiceScope scope = _serviceProvider.CreateAsyncScope();
+            UserService userService = scope.ServiceProvider.GetRequiredService<UserService>();
+            if (e.Notification.Payload.Event.Message.Text.Trim() == "!points")
+            {
+                long userId = long.Parse(e.Notification.Payload.Event.ChatterUserId);
+                string userName = e.Notification.Payload.Event.ChatterUserName;
+                uint userPoints = await userService.GetUsersChannelPoints(userId);
+                await _twitchApiService.SendChatMessage(string.Format("{0} has {1} points", userName, userPoints));
             }
         }
     }
-    
+
 }

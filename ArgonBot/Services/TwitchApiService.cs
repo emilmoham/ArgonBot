@@ -1,5 +1,6 @@
 ﻿using TwitchLib.Api;
 using TwitchLib.Api.Core.Enums;
+using TwitchLib.Api.Helix.Models.Chat.GetChatters;
 
 namespace ArgonBot.Services
 {
@@ -60,17 +61,37 @@ namespace ArgonBot.Services
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "error subscribing to chat messages");
+                _logger.LogError(e, "Could not create chat messages subscription");
             }
         }
 
 
         public async Task SendChatMessage(string chatMessage)
         {
-            await _api.Helix.Chat.SendChatMessage(
-                _broadcasterId,
-                _botUserId,
-                "VoHiYo");
+            try
+            {
+                await _api.Helix.Chat.SendChatMessage(
+                    _broadcasterId,
+                    _botUserId,
+                    chatMessage);
+            } catch (Exception e)
+            {
+                _logger.LogError(e, "Could not send chat message");
+            }
+        }
+
+        public async Task<GetChattersResponse> GetChatters()
+        {
+            try
+            {
+                return await _api.Helix.Chat.GetChattersAsync(
+                    _broadcasterId,
+                    _botUserId);
+            } catch (Exception e)
+            {
+                _logger.LogError(e, "Could not query chatters");
+                return null;
+            }
         }
     }
 }

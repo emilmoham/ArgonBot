@@ -1,4 +1,4 @@
-using ArgonBot.HostedServices;
+using ArgonBot.Repositories;
 using ArgonBot.Services;
 using Microsoft.EntityFrameworkCore;
 using TwitchLib.EventSub.Websockets.Extensions;
@@ -23,12 +23,19 @@ namespace ArgonBot
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlite(connectionString));
 
+
             builder.Services.AddLogging();
             builder.Services.AddTwitchLibEventSubWebsockets();
 
-            builder.Services.AddHostedService<WebsocketHostedService>();
+            // Add Repositories
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
 
+            // Add Services
             builder.Services.AddSingleton<TwitchApiService>();
+            builder.Services.AddScoped<UserService>();
+            builder.Services.AddHostedService<WebsocketHostedService>();
+            builder.Services.AddHostedService<ChannelPointDistributionBackgroundService>();
+
 
             var app = builder.Build();
 
