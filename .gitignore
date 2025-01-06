@@ -400,4 +400,4 @@ FodyWeavers.xsd
 *.sln.iml
 
 appsettings.Development.json
-ArgonBot.db
+ArgonBot.db*
